@@ -29,19 +29,6 @@ Base = declarative_base()
 #         return {}
 
 
-# Planetas
-# -
-# id integer PK FK >- Favourite.id_planet
-# name string
-# rotation_period integer
-# orbital_period integer
-# diameter integer
-# climate string
-# gravity Float
-# terrain string
-# surface_water integer
-# population integer
-
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -49,6 +36,8 @@ class User(Base):
     password = Column(String(250), nullable=False)
     mail = Column(String(250), nullable=False)
     phone = Column(Integer, nullable=True)
+
+    favourites = relationship('Favourite', back_populates='user')
 
 class Favourite(Base):
     __tablename__ = 'favourite'
@@ -59,6 +48,7 @@ class Favourite(Base):
     id_planet = Column(Integer, ForeignKey('planet.id'))
     id_vehicle = Column(Integer, ForeignKey('vehicle.id'))
     id_starship = Column(Integer, ForeignKey('starship.id'))
+
     
 class People(Base):
     __tablename__ = 'people'
@@ -71,7 +61,8 @@ class People(Base):
     eye_color = Column(String(250), nullable=False)
     birth_year = Column(String(250), nullable=False)  # deberia ser Date
     gender = Column(String(250), nullable=False)
-    # id_favourite = Column(Integer, ForeignKey('favourite.id'))
+    
+    favourites = relationship("Favourite", back_populates="people")
 
 
 class Vehicle(Base):
@@ -88,6 +79,8 @@ class Vehicle(Base):
     consumables = Column(String(250), nullable=False)
     vehicle_class = Column(String(250), nullable=False)
 
+    favourites = relationship("Favourite", back_populates="vehicle")
+
 class Planet(Base):
     __tablename__ = 'planet'
     id = Column(Integer, primary_key=True)
@@ -101,7 +94,7 @@ class Planet(Base):
     surface_water = Column(Integer, nullable=False)
     population = Column(Integer, nullable=False)
 
-
+    favourites = relationship("Favourite", back_populates="planet")
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
